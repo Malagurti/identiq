@@ -35,14 +35,10 @@ jobs:
     - name: Build package
       run: pnpm run build
 
-    - name: Setup .npmrc
-      run: |
-        echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-        echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
-        echo "always-auth=true" >> ~/.npmrc
-
     - name: Verify NPM authentication
       run: pnpm whoami
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Publish to NPM
       run: pnpm publish --access public --no-git-checks
