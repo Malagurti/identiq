@@ -28,7 +28,7 @@ export function getCanvasFingerprint(): string {
   ctx.fillStyle = '#36c';
   ctx.font = '18px Arial';
   ctx.textBaseline = 'top';
-  ctx.fillText('KeyprintJS Canvas Fingerprint', 10, 10);
+  ctx.fillText('IdentiqJS Canvas Fingerprint', 10, 10);
 
   // Draw shapes with different styles
   // Circle

@@ -37,7 +37,7 @@ export async function generate(options: Partial<FingerprintOptions> = {}): Promi
 }
 
 /**
- * Main export of the keyprint library.
+ * Main export of the identiq library.
  */
 export default {
   generate,

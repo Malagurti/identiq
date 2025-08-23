@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KeyprintJS Demo</title>
+    <title>IdentiqJS Demo</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -108,7 +108,7 @@
     </style>
 </head>
 <body>
-    <h1>KeyprintJS Demo</h1>
+    <h1>IdentiqJS Demo</h1>
     
     <div class="options">
         <h3>Options</h3>
@@ -151,10 +151,10 @@
     
     <!-- Method 1: Using ES Module import -->
     <script type="module">
-        import keyprint from './lib/index.esm.js';
+        import identiq from './lib/index.esm.js';
         
         // Store the imported module in window for the browser console access
-        window.keyprintModule = keyprint;
+        window.identiqModule = identiq;
         
         // DOM Elements
         const generateBtn = document.getElementById('generateBtn');
@@ -201,11 +201,11 @@
                 result.className = 'result-box';
                 
                 // Collect all components for debugging
-                const basicMetrics = keyprint.modules.getBasicMetrics();
+                const basicMetrics = identiq.modules.getBasicMetrics();
                 let canvasData = '';
                 
                 if (options.useCanvas) {
-                    canvasData = keyprint.modules.getCanvasFingerprint();
+                    canvasData = identiq.modules.getCanvasFingerprint();
                 }
                 
                 // Create the raw data object for debugging
@@ -215,7 +215,7 @@
                 };
                 
                 // Generate the fingerprint
-                const fingerprint = await keyprint.generate(options);
+                const fingerprint = await identiq.generate(options);
                 
                 // Display the main result
                 result.textContent = fingerprint;
@@ -257,10 +257,10 @@
     
     <!-- Method 2: Using the IIFE bundle (commented out as an alternative) -->
     <!-- 
-    <script src="./lib/keyprint.min.js"></script>
+    <script src="./lib/identiq.min.js"></script>
     <script>
-        // The IIFE bundle exposes 'keyprint' as a global variable
-        console.log('Keyprint library loaded:', keyprint);
+        // The IIFE bundle exposes 'identiq' as a global variable
+        console.log('Identiq library loaded:', identiq);
         
         // The rest of your code would be the same as in the module example
     </script>

@@ -17,9 +17,9 @@ export default {
       exports: 'named'
     },
     {
-      file: 'dist/keyprint.min.js',
+      file: 'dist/identiq.min.js',
       format: 'iife',
-      name: 'keyprint',
+      name: 'identiq',
       plugins: [terser()],
       sourcemap: true,
       exports: 'named'

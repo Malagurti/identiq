@@ -1,5 +1,5 @@
 {
-  "name": "keyprint",
+  "name": "identiq",
   "version": "0.2.0",
   "description": "A lightweight and efficient browser fingerprinting library",
   "type": "module",

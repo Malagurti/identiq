@@ -1,4 +1,4 @@
-# KeyprintJS
+# IdentiqJS
 
 A lightweight and efficient browser fingerprinting library that combines basic data collection methods with Canvas Fingerprinting.
 
@@ -6,13 +6,13 @@ A lightweight and efficient browser fingerprinting library that combines basic d
 
 ```bash
 # Using npm
-npm install keyprint
+npm install identiq
 
 # Using yarn
-yarn add keyprint
+yarn add identiq
 
 # Using pnpm
-pnpm add keyprint
+pnpm add identiq
 ```
 
 ## Basic Usage
@@ -20,15 +20,15 @@ pnpm add keyprint
 ### Via ES Module import
 
 ```typescript
-import keyprint from 'keyprint';
+import identiq from 'identiq';
 
 // Generate fingerprint with default options
-keyprint.generate().then(fingerprint => {
+identiq.generate().then(fingerprint => {
   console.log('Fingerprint:', fingerprint);
 });
 
 // Generate fingerprint without Canvas (lighter, less precise)
-keyprint.generate({ useCanvas: false }).then(fingerprint => {
+identiq.generate({ useCanvas: false }).then(fingerprint => {
   console.log('Basic fingerprint:', fingerprint);
 });
 ```
@@ -36,9 +36,9 @@ keyprint.generate({ useCanvas: false }).then(fingerprint => {
 ### Via script tag
 
 ```html
-<script src="https://unpkg.com/keyprint/dist/keyprint.min.js"></script>
+<script src="https://unpkg.com/identiq/dist/identiq.min.js"></script>
 <script>
-  keyprint.generate().then(function(fingerprint) {
+  identiq.generate().then(function(fingerprint) {
     console.log('Fingerprint:', fingerprint);
   });
 </script>
@@ -63,10 +63,10 @@ The library automatically collects all available metrics without requiring addit
 You can also access individual modules for custom usage:
 
 ```typescript
-import keyprint from 'keyprint';
+import identiq from 'identiq';
 
 // Access individual modules
-const basicMetrics = keyprint.modules.getBasicMetrics();
+const basicMetrics = identiq.modules.getBasicMetrics();
 console.log('Basic metrics:', basicMetrics);
 // Example output:
 // {
@@ -81,11 +81,11 @@ console.log('Basic metrics:', basicMetrics);
 //   colorScheme: "dark"
 // }
 
-const canvasData = keyprint.modules.getCanvasFingerprint();
+const canvasData = identiq.modules.getCanvasFingerprint();
 console.log('Canvas data:', canvasData.substring(0, 50) + '...');
 
 // Generate custom hash
-keyprint.modules.generateHash('custom data').then(hash => {
+identiq.modules.generateHash('custom data').then(hash => {
   console.log('Custom hash:', hash);
 });
 ```
@@ -117,7 +117,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ```
 MIT License
 
-Copyright (c) 2025 KeyprintJS
+Copyright (c) 2025 IdentiqJS
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

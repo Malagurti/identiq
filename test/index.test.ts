@@ -16,7 +16,7 @@ jest.mock('../src/modules/hash', () => ({
   generateHash: jest.fn()
 }));
 
-describe('Keyprint Main Module', () => {
+describe('Identiq Main Module', () => {
   beforeEach(() => {
     // Reset all mocks
     jest.clearAllMocks();

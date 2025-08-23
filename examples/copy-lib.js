@@ -9,7 +9,7 @@ if (!fs.existsSync(libDir)) {
 
 // Copy the library files
 const distDir = path.join(process.cwd(), 'dist');
-const files = ['keyprint.min.js', 'index.esm.js', 'index.js'];
+const files = ['identiq.min.js', 'index.esm.js', 'index.js'];
 
 files.forEach(file => {
   const sourcePath = path.join(distDir, file);
