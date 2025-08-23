@@ -1,18 +1,18 @@
-import { generate } from '../src/index.js';
-import { getBasicMetrics } from '../src/modules/basic.js';
-import { getCanvasFingerprint } from '../src/modules/canvas.js';
-import { generateHash } from '../src/modules/hash.js';
+import { generate } from '../src/index';
+import { getBasicMetrics } from '../src/modules/basic';
+import { getCanvasFingerprint } from '../src/modules/canvas';
+import { generateHash } from '../src/modules/hash';
 
 // Mock the modules
-jest.mock('../src/modules/basic.js', () => ({
+jest.mock('../src/modules/basic', () => ({
   getBasicMetrics: jest.fn()
 }));
 
-jest.mock('../src/modules/canvas.js', () => ({
+jest.mock('../src/modules/canvas', () => ({
   getCanvasFingerprint: jest.fn()
 }));
 
-jest.mock('../src/modules/hash.js', () => ({
+jest.mock('../src/modules/hash', () => ({
   generateHash: jest.fn()
 }));
 

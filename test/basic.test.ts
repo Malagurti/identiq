@@ -1,13 +1,14 @@
-import { getBasicMetrics } from '../src/modules/basic.js';
+import { getBasicMetrics } from '../src/modules/basic';
 
 describe('Basic Metrics Module', () => {
   // Store original navigator and screen properties
-  const originalNavigator = global.navigator;
-  const originalScreen = global.screen;
+  const originalNavigator = globalThis.navigator;
+  const originalScreen = globalThis.screen;
+  let originalDate: typeof Date;
 
   beforeEach(() => {
     // Mock navigator and screen objects
-    Object.defineProperty(global, 'navigator', {
+    Object.defineProperty(globalThis, 'navigator', {
       value: {
         language: 'en-US',
         hardwareConcurrency: 8,
@@ -24,7 +25,7 @@ describe('Basic Metrics Module', () => {
       writable: true
     });
 
-    Object.defineProperty(global, 'screen', {
+    Object.defineProperty(globalThis, 'screen', {
       value: {
         width: 1920,
         height: 1080,
@@ -34,8 +35,8 @@ describe('Basic Metrics Module', () => {
     });
 
     // Mock Date.prototype.getTimezoneOffset
-    const originalDate = global.Date;
-    global.Date = class extends originalDate {
+    originalDate = globalThis.Date;
+    globalThis.Date = class extends originalDate {
       getTimezoneOffset(): number {
         return -180; // -3 hours
       }
@@ -44,17 +45,17 @@ describe('Basic Metrics Module', () => {
 
   afterEach(() => {
     // Restore original objects
-    Object.defineProperty(global, 'navigator', {
+    Object.defineProperty(globalThis, 'navigator', {
       value: originalNavigator,
       writable: true
     });
     
-    Object.defineProperty(global, 'screen', {
+    Object.defineProperty(globalThis, 'screen', {
       value: originalScreen,
       writable: true
     });
     
-    global.Date = originalDate;
+    globalThis.Date = originalDate;
   });
 
   test('should return an object with all required metrics', () => {
@@ -84,7 +85,7 @@ describe('Basic Metrics Module', () => {
 
   test('should handle missing optional metrics', () => {
     // Remove optional properties
-    Object.defineProperty(global, 'navigator', {
+    Object.defineProperty(globalThis, 'navigator', {
       value: {
         language: 'en-US',
         plugins: { length: 0 }

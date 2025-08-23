@@ -1,7 +1,7 @@
-import { getBasicMetrics } from './modules/basic.js';
-import { getCanvasFingerprint } from './modules/canvas.js';
-import { generateHash } from './modules/hash.js';
-import type { Fingerprint, FingerprintOptions } from './types.js';
+import { getBasicMetrics } from './modules/basic';
+import { getCanvasFingerprint } from './modules/canvas';
+import { generateHash } from './modules/hash';
+import type { Fingerprint, FingerprintOptions } from './types';
 
 /**
  * Default options for fingerprint generation.
