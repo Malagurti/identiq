@@ -18,7 +18,7 @@
     "copy-lib": "node examples/copy-lib.js",
     "dev": "pnpm build && pnpm copy-lib && serve examples",
     "dev:watch": "rollup -c -w & pnpm copy-lib && serve examples",
-    "prepublishOnly": "npm run build && npm run test:ci"
+    "prepublishOnly": "pnpm run build && pnpm run test:ci"
   },
   "keywords": [
     "fingerprint",
