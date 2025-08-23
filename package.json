@@ -9,11 +9,16 @@
   "scripts": {
     "build": "rollup -c",
     "test": "jest",
+    "test:ci": "jest --ci --coverage --watchAll=false",
     "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "type-check": "tsc --noEmit",
     "copy-lib": "node examples/copy-lib.js",
     "dev": "pnpm build && pnpm copy-lib && serve examples",
-    "dev:watch": "rollup -c -w & pnpm copy-lib && serve examples"
+    "dev:watch": "rollup -c -w & pnpm copy-lib && serve examples",
+    "prepublishOnly": "npm run build && npm run test:ci"
   },
   "keywords": [
     "fingerprint",
