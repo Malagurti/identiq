@@ -24,6 +24,7 @@ jobs:
       with:
         node-version: '20.x'
         cache: 'pnpm'
+        registry-url: 'https://registry.npmjs.org/'
 
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
@@ -41,14 +42,12 @@ jobs:
         echo "always-auth=true" >> ~/.npmrc
 
     - name: Verify NPM authentication
-      run: pnpm whoami --registry https://registry.npmjs.org/
+      run: pnpm whoami
 
     - name: Publish to NPM
-      run: pnpm publish --access public --no-git-checks --registry https://registry.npmjs.org/
+      run: pnpm publish --access public --no-git-checks
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        NPM_CONFIG_USERCONFIG: ~/.npmrc
 
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/')
