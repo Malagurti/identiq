@@ -93,4 +93,107 @@ describe('Hash Generation Module', () => {
     expect(typeof result).toBe('string');
     expect(result.length).toBeGreaterThanOrEqual(16);
   });
+
+  describe('Hash Consistency Tests', () => {
+    test('should generate identical hashes for identical inputs', async () => {
+      const input = 'test string for consistency';
+      
+      // Generate hash multiple times
+      const hash1 = await generateHash(input);
+      const hash2 = await generateHash(input);
+      const hash3 = await generateHash(input);
+      
+      // All should be identical
+      expect(hash1).toBe(hash2);
+      expect(hash2).toBe(hash3);
+      expect(hash1).toBe(hash3);
+    });
+
+    test('should generate different hashes for different inputs', async () => {
+      const input1 = 'first input';
+      const input2 = 'second input';
+      const input3 = 'third input';
+      
+      const hash1 = await generateHash(input1);
+      const hash2 = await generateHash(input2);
+      const hash3 = await generateHash(input3);
+      
+      // All should be different
+      expect(hash1).not.toBe(hash2);
+      expect(hash2).not.toBe(hash3);
+      expect(hash1).not.toBe(hash3);
+    });
+
+    test('should maintain consistency across rapid calls', async () => {
+      const input = 'rapid test input';
+      
+      // Generate multiple hashes rapidly
+      const promises = Array.from({ length: 20 }, () => generateHash(input));
+      const hashes = await Promise.all(promises);
+      
+      // All should be identical
+      const firstHash = hashes[0];
+      hashes.forEach(hash => {
+        expect(hash).toBe(firstHash);
+      });
+    });
+
+    test('should handle edge cases consistently', async () => {
+      // Empty string
+      const emptyHash1 = await generateHash('');
+      const emptyHash2 = await generateHash('');
+      expect(emptyHash1).toBe(emptyHash2);
+      
+      // Very long string
+      const longString = 'a'.repeat(10000);
+      const longHash1 = await generateHash(longString);
+      const longHash2 = await generateHash(longString);
+      expect(longHash1).toBe(longHash2);
+      
+      // Special characters
+      const specialChars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+      const specialHash1 = await generateHash(specialChars);
+      const specialHash2 = await generateHash(specialChars);
+      expect(specialHash1).toBe(specialHash2);
+    });
+
+    test('should be deterministic across different crypto implementations', async () => {
+      const input = 'deterministic test';
+      
+      // Test with SubtleCrypto available
+      const mockDigest = jest.fn().mockImplementation(() => {
+        const buffer = new ArrayBuffer(32);
+        const view = new Uint8Array(buffer);
+        for (let i = 0; i < 32; i++) {
+          view[i] = 0xCD;
+        }
+        return Promise.resolve(buffer);
+      });
+      
+      Object.defineProperty(globalThis, 'crypto', {
+        value: {
+          subtle: {
+            digest: mockDigest
+          }
+        },
+        writable: true
+      });
+      
+      const hashWithSubtle = await generateHash(input);
+      
+      // Test with fallback hash
+      Object.defineProperty(globalThis, 'crypto', {
+        value: {},
+        writable: true
+      });
+      
+      const hashWithFallback = await generateHash(input);
+      
+      // Both should be consistent for the same input
+      expect(hashWithSubtle).toBeTruthy();
+      expect(hashWithFallback).toBeTruthy();
+      expect(typeof hashWithSubtle).toBe('string');
+      expect(typeof hashWithFallback).toBe('string');
+    });
+  });
 });

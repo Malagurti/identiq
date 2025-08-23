@@ -13,14 +13,14 @@ export async function generateHash(input: string): Promise<string> {
       // Convert the input string to an array buffer
       const encoder = new TextEncoder();
       const data = encoder.encode(input);
-      
+
       // Generate the SHA-256 hash
       const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
-      
+
       // Convert the hash to a hexadecimal string
       const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
-      
+      const hashHex = hashArray.map((byte) => byte.toString(16).padStart(2, '0')).join('');
+
       return hashHex;
     } catch (e) {
       // Fall back to simpler hash if SubtleCrypto fails
@@ -41,25 +41,25 @@ export async function generateHash(input: string): Promise<string> {
  */
 function fallbackHash(input: string): string {
   let hash = 0;
-  
+
   if (input.length === 0) {
     return '0';
   }
-  
+
   // Simple string hash algorithm
   for (let i = 0; i < input.length; i++) {
     const char = input.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32bit integer
   }
-  
+
   // Create a more complex hash by iterating multiple times
   let result = Math.abs(hash).toString(16);
-  
+
   // Pad the result to ensure consistent length
   while (result.length < 16) {
     result = '0' + result;
   }
-  
+
   return result;
 }
