@@ -8,6 +8,10 @@ export interface BasicMetrics {
   readonly colorDepth: number;
   readonly hardwareConcurrency?: number;
   readonly plugins?: readonly string[];
+  readonly userAgent: string;
+  readonly platform: string;
+  readonly vendor: string;
+  readonly colorScheme: string;
 }
 
 /**
@@ -21,6 +25,10 @@ export interface MutableBasicMetrics {
   colorDepth: number;
   hardwareConcurrency?: number;
   plugins?: string[];
+  userAgent: string;
+  platform: string;
+  vendor: string;
+  colorScheme: string;
 }
 
 /**
