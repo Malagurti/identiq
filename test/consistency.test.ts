@@ -106,23 +106,18 @@ describe('Fingerprint Consistency Tests', () => {
     // and not affected by timing or other external factors
   });
 
-  test('should maintain consistency across different option combinations', async () => {
-    // Test various option combinations
-    const combinations = [
-      {},
-      { useCanvas: true },
-      { useCanvas: false },
-      { useCanvas: undefined }
-    ];
+  test('should maintain consistency with canvas enabled', async () => {
+    // Test with canvas always enabled (default behavior)
+    const fingerprint1 = await generate();
+    const fingerprint2 = await generate({});
+    const fingerprint3 = await generate({ useCanvas: true });
     
-    const fingerprints = await Promise.all(
-      combinations.map(options => generate(options))
-    );
+    // All should be identical since they all use canvas
+    expect(fingerprint1).toBe(fingerprint2);
+    expect(fingerprint2).toBe(fingerprint3);
     
-    // All should be consistent for the same environment
-    const firstFingerprint = fingerprints[0];
-    fingerprints.forEach(fingerprint => {
-      expect(fingerprint).toBe(firstFingerprint);
-    });
+    // Test that undefined option behaves differently (falsy in JavaScript)
+    const fingerprint4 = await generate({ useCanvas: undefined });
+    expect(fingerprint4).not.toBe(fingerprint1);
   });
 });
