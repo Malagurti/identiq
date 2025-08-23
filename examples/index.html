@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeyprintJS Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        h1 {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            font-size: 16px;
+            margin: 5px 5px 5px 0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button.secondary {
+            background-color: #2196F3;
+        }
+        button.secondary:hover {
+            background-color: #0b7dda;
+        }
+        .result-box {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .error {
+            color: #d32f2f;
+        }
+        .debug-panel {
+            display: none;
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        .debug-panel.visible {
+            display: block;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+        .tab.active {
+            background-color: #fff;
+            border-bottom: 1px solid #fff;
+            margin-bottom: -1px;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            border: 1px solid #ddd;
+            padding: 15px;
+            background-color: #fff;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .options {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+        .options label {
+            margin-right: 15px;
+        }
+        #canvasPreview img {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>KeyprintJS Demo</h1>
+    
+    <div class="options">
+        <h3>Options</h3>
+        <label>
+            <input type="checkbox" id="useCanvas" checked> Use Canvas Fingerprinting
+        </label>
+    </div>
+    
+    <button id="generateBtn">Generate Fingerprint</button>
+    <button id="toggleDebugBtn" class="secondary">Toggle Debug Mode</button>
+    
+    <h3>Fingerprint Result:</h3>
+    <div id="result" class="result-box">Click the button to generate a fingerprint</div>
+    
+    <div id="debugPanel" class="debug-panel">
+        <h2>Debug Information</h2>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="basicMetrics">Basic Metrics</div>
+            <div class="tab" data-tab="canvas">Canvas Data</div>
+            <div class="tab" data-tab="rawData">Raw JSON</div>
+        </div>
+        
+        <div id="basicMetricsTab" class="tab-content active">
+            <h3>Basic Browser Metrics</h3>
+            <div id="basicMetricsResult" class="result-box">No data yet</div>
+        </div>
+        
+        <div id="canvasTab" class="tab-content">
+            <h3>Canvas Fingerprint</h3>
+            <div id="canvasResult" class="result-box">No data yet</div>
+            <div id="canvasPreview"></div>
+        </div>
+        
+        <div id="rawDataTab" class="tab-content">
+            <h3>Raw Fingerprint Data</h3>
+            <div id="rawDataResult" class="result-box">No data yet</div>
+        </div>
+    </div>
+    
+    <!-- Method 1: Using ES Module import -->
+    <script type="module">
+        import keyprint from './lib/index.esm.js';
+        
+        // Store the imported module in window for the browser console access
+        window.keyprintModule = keyprint;
+        
+        // DOM Elements
+        const generateBtn = document.getElementById('generateBtn');
+        const toggleDebugBtn = document.getElementById('toggleDebugBtn');
+        const useCanvasCheckbox = document.getElementById('useCanvas');
+        const result = document.getElementById('result');
+        const debugPanel = document.getElementById('debugPanel');
+        const basicMetricsResult = document.getElementById('basicMetricsResult');
+        const canvasResult = document.getElementById('canvasResult');
+        const canvasPreview = document.getElementById('canvasPreview');
+        const rawDataResult = document.getElementById('rawDataResult');
+        
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Show corresponding content
+                const tabName = tab.getAttribute('data-tab');
+                document.getElementById(`${tabName}Tab`).classList.add('active');
+            });
+        });
+        
+        // Toggle debug panel
+        toggleDebugBtn.addEventListener('click', () => {
+            debugPanel.classList.toggle('visible');
+        });
+        
+        // Generate fingerprint
+        generateBtn.addEventListener('click', async () => {
+            try {
+                // Get options from UI
+                const options = {
+                    useCanvas: useCanvasCheckbox.checked
+                };
+                
+                // Clear previous results
+                result.textContent = 'Generating fingerprint...';
+                result.className = 'result-box';
+                
+                // Collect all components for debugging
+                const basicMetrics = keyprint.modules.getBasicMetrics();
+                let canvasData = '';
+                
+                if (options.useCanvas) {
+                    canvasData = keyprint.modules.getCanvasFingerprint();
+                }
+                
+                // Create the raw data object for debugging
+                const rawData = {
+                    basic: basicMetrics,
+                    canvas: options.useCanvas ? canvasData : ''
+                };
+                
+                // Generate the fingerprint
+                const fingerprint = await keyprint.generate(options);
+                
+                // Display the main result
+                result.textContent = fingerprint;
+                
+                // Update debug information
+                updateDebugInfo(basicMetrics, canvasData, rawData);
+                
+            } catch (error) {
+                result.textContent = `Error: ${error.message}`;
+                result.className = 'result-box error';
+                console.error(error);
+            }
+        });
+        
+        // Update debug information
+        function updateDebugInfo(basicMetrics, canvasData, rawData) {
+            // Update basic metrics
+            basicMetricsResult.textContent = JSON.stringify(basicMetrics, null, 2);
+            
+            // Update canvas data
+            if (canvasData) {
+                // Show truncated canvas data string
+                canvasResult.textContent = canvasData.substring(0, 100) + '...';
+                
+                // Show canvas preview
+                canvasPreview.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = canvasData;
+                canvasPreview.appendChild(img);
+            } else {
+                canvasResult.textContent = 'Canvas fingerprinting disabled';
+                canvasPreview.innerHTML = '';
+            }
+            
+            // Update raw data
+            rawDataResult.textContent = JSON.stringify(rawData, null, 2);
+        }
+    </script>
+    
+    <!-- Method 2: Using the IIFE bundle (commented out as an alternative) -->
+    <!-- 
+    <script src="./lib/keyprint.min.js"></script>
+    <script>
+        // The IIFE bundle exposes 'keyprint' as a global variable
+        console.log('Keyprint library loaded:', keyprint);
+        
+        // The rest of your code would be the same as in the module example
+    </script>
+    -->
+    
+</body>
+</html>

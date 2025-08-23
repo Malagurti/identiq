@@ -10,7 +10,10 @@
     "build": "rollup -c",
     "test": "jest",
     "lint": "eslint src --ext .ts",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "copy-lib": "node examples/copy-lib.js",
+    "dev": "pnpm build && pnpm copy-lib && serve examples",
+    "dev:watch": "rollup -c -w & pnpm copy-lib && serve examples"
   },
   "keywords": [
     "fingerprint",
@@ -33,6 +36,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "prettier": "^3.2.5",
     "rollup": "^4.9.6",
+    "serve": "^14.2.4",
     "ts-jest": "^29.1.2",
     "tslib": "^2.6.2",
     "typescript": "^5.3.3"
