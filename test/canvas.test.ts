@@ -1,4 +1,4 @@
-import { getCanvasFingerprint } from '../src/modules/canvas.js';
+import { getCanvasFingerprint } from '../src/modules/canvas';
 
 describe('Canvas Fingerprinting Module', () => {
   // Store the original document.createElement

@@ -1,12 +1,12 @@
-import { generateHash } from '../src/modules/hash.js';
+import { generateHash } from '../src/modules/hash';
 
 describe('Hash Generation Module', () => {
   // Store original crypto object
-  const originalCrypto = global.crypto;
+  const originalCrypto = globalThis.crypto;
   
   afterEach(() => {
     // Restore original crypto
-    Object.defineProperty(global, 'crypto', {
+    Object.defineProperty(globalThis, 'crypto', {
       value: originalCrypto,
       writable: true
     });
@@ -27,7 +27,7 @@ describe('Hash Generation Module', () => {
       return Promise.resolve(buffer);
     });
     
-    Object.defineProperty(global, 'crypto', {
+    Object.defineProperty(globalThis, 'crypto', {
       value: {
         subtle: {
           digest: mockDigest
@@ -37,7 +37,7 @@ describe('Hash Generation Module', () => {
     });
     
     // TextEncoder mock
-    global.TextEncoder = jest.fn().mockImplementation(() => ({
+    globalThis.TextEncoder = jest.fn().mockImplementation(() => ({
       encode: jest.fn().mockReturnValue(new Uint8Array([1, 2, 3]))
     }));
     
@@ -52,7 +52,7 @@ describe('Hash Generation Module', () => {
 
   test('should use fallback hash when SubtleCrypto is not available', async () => {
     // Remove crypto.subtle
-    Object.defineProperty(global, 'crypto', {
+    Object.defineProperty(globalThis, 'crypto', {
       value: {},
       writable: true
     });
@@ -78,7 +78,7 @@ describe('Hash Generation Module', () => {
       return Promise.reject(new Error('SubtleCrypto error'));
     });
     
-    Object.defineProperty(global, 'crypto', {
+    Object.defineProperty(globalThis, 'crypto', {
       value: {
         subtle: {
           digest: mockDigest
